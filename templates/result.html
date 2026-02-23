@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Detection Result - AgriPredict</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800&display=swap" />
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-green: #2d8659;
+    --light-green: #3ea76c;
+    --dark-green: #1a5c3a;
+    --cream: #f9f7f4;
+    --white: #ffffff;
+    --dark-text: #2c2c2c;
+    --gray-text: #666666;
+}
+
+body {
+    font-family: 'Poppins', 'Noto Sans Tamil', 'Noto Sans Devanagari', sans-serif;
+    background: linear-gradient(135deg, #f9f7f4 0%, #e8f5e9 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 0.5rem;
+    background: var(--white);
+    padding: 0.4rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.lang-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--gray-text);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.lang-btn:hover {
+    background: rgba(45, 134, 89, 0.1);
+    color: var(--primary-green);
+}
+
+.lang-btn.active {
+    background: var(--primary-green);
+    color: var(--white);
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--white);
+    border-radius: 30px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--cream);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.back-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    background: var(--cream);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background: var(--primary-green);
+    transform: translateX(-5px);
+}
+
+.back-btn img {
+    width: 25px;
+    height: 25px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-text);
+}
+
+.result-content {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 2.5rem;
+    line-height: 1.8;
+}
+
+.result-content h2 {
+    color: var(--dark-green);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.result-text {
+    color: var(--dark-text);
+    font-size: 1.1rem;
+    white-space: pre-wrap;
+    text-align: justify;
+}
+
+.result-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 15px;
+    border-left: 4px solid var(--primary-green);
+}
+
+.result-section h3 {
+    color: var(--primary-green);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.result-section p {
+    color: var(--gray-text);
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .language-switcher {
+        top: 10px;
+        right: 10px;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.75rem;
+    }
+    
+    .container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .result-content {
+        padding: 1.5rem;
+    }
+}
+</style>
+
+<body>
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="ta" onclick="setLanguage('ta')">த</button>
+        <button class="lang-btn" data-lang="hi" onclick="setLanguage('hi')">हि</button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{{ url_for('detect') }}">
+                    <button class="back-btn">
+                        <img src="templates/assets/arr-blue.png" alt="Back" />
+                    </button>
+                </a>
+                <h1 class="title" data-translate="detectionResult">Detection Result</h1>
+            </div>
+        </div>
+
+        <div class="result-content">
+            <div class="result-text">{{ result }}</div>
+        </div>
+    </div>
+
+    <script>
+    const translations = {
+        en: {
+            detectionResult: "Detection Result"
+        },
+        ta: {
+            detectionResult: "கண்டறிதல் முடிவு"
+        },
+        hi: {
+            detectionResult: "पहचान परिणाम"
+        }
+    };
+
+    function setLanguage(lang) {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('[data-translate]').forEach(el => {
+            const key = el.getAttribute('data-translate');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.textContent = translations[lang][key];
+                }
+            }
+        });
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('language') || 'en';
+        setLanguage(savedLang);
+    });
+    </script>
+</body>
+</html>

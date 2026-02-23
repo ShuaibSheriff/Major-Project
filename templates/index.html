@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AgriPredict Enterprise | Precision Agriculture Intelligence</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Poppins:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2d8659",
+                        "primary-dark": "#1a5c3a",
+                        "accent-emerald": "#10b981",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#141e19",
+                        "slate-custom": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "serif": ["Poppins", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .hero-shadow {
+            box-shadow: 0 20px 25px -5px rgba(45, 134, 89, 0.1), 0 10px 10px -5px rgba(45, 134, 89, 0.04);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #1a5c3a 0%, #2d8659 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lang-btn {
+            color: #64748b;
+        }
+
+        .lang-btn.active {
+            background: #2d8659;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-white font-display text-slate-900">
+    <!-- Sticky Glassmorphism Header -->
+    <header class="glass-header sticky top-0 z-50 border-b border-slate-100 px-6 lg:px-20 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-1.5 rounded">
+                    <svg class="w-6 h-6 text-white" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h1 class="font-serif text-xl font-bold tracking-tight text-primary-dark">AgriPredict</h1>
+            </div>
+            <nav class="hidden md:flex items-center gap-10">
+                <a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                    href="{{ url_for('home') }}" data-translate="navHome">Home</a>
+                <a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                    href="{{ url_for('predict') }}" data-translate="navPredict">Predict</a>
+                <a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                    href="{{ url_for('detect') }}" data-translate="navDetect">Detect</a>
+                <a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                    href="{{ url_for('chat') }}" data-translate="navChat">Chatbot</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <div class="hidden sm:flex items-center gap-2 bg-slate-100 rounded-lg p-1">
+                    <button class="lang-btn px-3 py-1 rounded text-xs font-semibold transition-all" data-lang="en"
+                        onclick="setLanguage('en')">EN</button>
+                    <button class="lang-btn px-3 py-1 rounded text-xs font-semibold transition-all" data-lang="ta"
+                        onclick="setLanguage('ta')">த</button>
+                    <button class="lang-btn px-3 py-1 rounded text-xs font-semibold transition-all" data-lang="hi"
+                        onclick="setLanguage('hi')">हि</button>
+                </div>
+                <a href="{{ url_for('predict') }}"
+                    class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold tracking-wide hover:bg-primary-dark transition-all shadow-md"
+                    data-translate="ctaButton">
+                    Predict Now
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <section class="relative bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-20 pt-16 pb-24 lg:pt-32 lg:pb-40">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <!-- Text Column -->
+                <div class="flex-1 text-center lg:text-left">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-emerald opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent-emerald"></span>
+                        </span>
+                        Next-Gen Agriculture AI
+                    </div>
+                    <h1
+                        class="text-5xl lg:text-7xl font-bold font-serif text-primary-dark leading-[1.1] tracking-tight mb-8">
+                        <span data-translate="heroTitle">Precision Intelligence for</span> <span class="text-gradient"
+                            data-translate="heroHighlight">Global Agriculture.</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 font-normal leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0"
+                        data-translate="heroDescription">
+                        Empowering modern enterprises with Gemini-powered AI insights for yield optimization, resource
+                        management, and climate risk mitigation.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="{{ url_for('predict') }}"
+                            class="w-full sm:w-auto bg-primary text-white px-8 py-4 rounded-lg text-base font-bold tracking-wide hover:bg-primary-dark hero-shadow transition-all"
+                            data-translate="predictNow">
+                            Predict Now
+                        </a>
+                        <button
+                            class="w-full sm:w-auto border border-slate-200 text-slate-700 px-8 py-4 rounded-lg text-base font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                            <span data-translate="watchFilm">Watch Vision Film</span>
+                            <span class="material-symbols-outlined">play_circle</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Image Column -->
+                <div class="flex-1 relative w-full">
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl z-10 border-[8px] border-white">
+                        <img alt="Modern farmer using tablet" class="w-full h-[500px] object-cover"
+                            data-alt="Modern tech-enabled farmer working in a high-tech greenhouse with tablet"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzkkHQxbfNK4nWwZCApHE8EKFRtJ61fOaZdRXITBnOiZbXwaBNXNXMOyZQFOpfu4myoDwCLms-HrpQ-odJ8PRsgEvRAgZ4YVFmZ6Bh1JVQkmRF9O1xb15mhReqYT1-onMzMKhKGoSapaD-1Zfeml_tk9mFQffxE1FuPD_4FELX7uPDpBv6YtuIz-gMp_isAH2XQDXU6LRo-Y6pvVpHHeLZdNWL4B74ie0Z0E_hkhcCGkjBDh4dmhcVlwk5_0fbU6btGbkDFvOt9xE" />
+                    </div>
+                    <!-- Background Accent -->
+                    <div class="absolute -top-10 -right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-accent-emerald/10 rounded-full blur-3xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Trust/Stats Bar -->
+    <section class="bg-primary-dark py-12 px-6 lg:px-20 text-white border-y border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-center lg:justify-between items-center gap-10">
+            <div class="flex flex-col items-center lg:items-start">
+                <span class="text-3xl font-bold font-serif">98.2%</span>
+                <span class="text-white/60 text-xs font-semibold uppercase tracking-widest mt-1"
+                    data-translate="stat1">Prediction
+                    Accuracy</span>
+            </div>
+            <div class="w-px h-12 bg-white/20 hidden lg:block"></div>
+            <div class="flex flex-col items-center lg:items-start">
+                <span class="text-3xl font-bold font-serif">15k+</span>
+                <span class="text-white/60 text-xs font-semibold uppercase tracking-widest mt-1"
+                    data-translate="stat2">Enterprise
+                    Partners</span>
+            </div>
+            <div class="w-px h-12 bg-white/20 hidden lg:block"></div>
+            <div class="flex flex-col items-center lg:items-start">
+                <span class="text-3xl font-bold font-serif">2.4M</span>
+                <span class="text-white/60 text-xs font-semibold uppercase tracking-widest mt-1"
+                    data-translate="stat3">Hectares
+                    Monitored</span>
+            </div>
+            <div class="w-px h-12 bg-white/20 hidden lg:block"></div>
+            <div class="flex flex-col items-center lg:items-start">
+                <span class="text-3xl font-bold font-serif">40+</span>
+                <span class="text-white/60 text-xs font-semibold uppercase tracking-widest mt-1"
+                    data-translate="stat4">Supported
+                    Countries</span>
+            </div>
+        </div>
+    </section>
+    <!-- Features Grid -->
+    <section class="py-24 bg-background-light px-6 lg:px-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-bold text-primary uppercase tracking-widest mb-3" data-translate="sectionTitle">
+                    Enterprise Suite</h2>
+                <h3 class="text-3xl lg:text-4xl font-bold font-serif text-slate-900" data-translate="sectionSubtitle">
+                    Smart Farming Solutions</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div
+                    class="bg-white p-8 border border-slate-200 hover:border-primary/40 hover:shadow-xl transition-all flex flex-col h-full group">
+                    <div
+                        class="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">query_stats</span>
+                    </div>
+                    <h4 class="text-lg font-bold font-serif text-slate-900 mb-3" data-translate="card1Title">Soil
+                        Analytics</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-6 flex-grow" data-translate="card1Desc">Advanced
+                        nutrient mapping and
+                        moisture tracking using multi-spectral satellite imagery.</p>
+                    <a class="inline-flex items-center text-xs font-bold text-primary uppercase tracking-wider hover:translate-x-1 transition-transform"
+                        href="#">
+                        <span data-translate="readMore">Read More</span> <span
+                            class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Card 2 -->
+                <div
+                    class="bg-white p-8 border border-slate-200 hover:border-primary/40 hover:shadow-xl transition-all flex flex-col h-full group">
+                    <div
+                        class="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">insights</span>
+                    </div>
+                    <h4 class="text-lg font-bold font-serif text-slate-900 mb-3" data-translate="card2Title">Yield
+                        Forecasting</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-6 flex-grow" data-translate="card2Desc">
+                        AI-driven production estimates with
+                        95% confidence intervals for future-proof planning.</p>
+                    <a class="inline-flex items-center text-xs font-bold text-primary uppercase tracking-wider hover:translate-x-1 transition-transform"
+                        href="#">
+                        <span data-translate="readMore">Read More</span> <span
+                            class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Card 3 -->
+                <div
+                    class="bg-white p-8 border border-slate-200 hover:border-primary/40 hover:shadow-xl transition-all flex flex-col h-full group">
+                    <div
+                        class="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">pest_control</span>
+                    </div>
+                    <h4 class="text-lg font-bold font-serif text-slate-900 mb-3" data-translate="card3Title">Pest Risk
+                    </h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-6 flex-grow" data-translate="card3Desc">Early
+                        warning systems detecting
+                        biological threats before they impact crop quality.</p>
+                    <a class="inline-flex items-center text-xs font-bold text-primary uppercase tracking-wider hover:translate-x-1 transition-transform"
+                        href="#">
+                        <span data-translate="readMore">Read More</span> <span
+                            class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Card 4 -->
+                <div
+                    class="bg-white p-8 border border-slate-200 hover:border-primary/40 hover:shadow-xl transition-all flex flex-col h-full group">
+                    <div
+                        class="w-12 h-12 rounded bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">local_shipping</span>
+                    </div>
+                    <h4 class="text-lg font-bold font-serif text-slate-900 mb-3" data-translate="card4Title">Supply
+                        Chain</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-6 flex-grow" data-translate="card4Desc">
+                        End-to-end logistics optimization
+                        from farm-gate to global distribution hubs.</p>
+                    <a class="inline-flex items-center text-xs font-bold text-primary uppercase tracking-wider hover:translate-x-1 transition-transform"
+                        href="#">
+                        <span data-translate="readMore">Read More</span> <span
+                            class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- AI Tech Showcase -->
+    <section class="py-24 bg-white px-6 lg:px-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto bg-primary-dark rounded-2xl overflow-hidden relative">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="flex-1 p-10 lg:p-20 z-10">
+                    <h2 class="text-accent-emerald text-sm font-bold uppercase tracking-widest mb-4"
+                        data-translate="aiSectionLabel">The Engine</h2>
+                    <h3 class="text-white text-4xl lg:text-5xl font-bold font-serif mb-6 leading-tight"
+                        data-translate="aiTitle">Gemini-Driven AI
+                        Architecture</h3>
+                    <p class="text-white/70 text-lg leading-relaxed mb-10" data-translate="aiDescription">
+                        Our proprietary intelligence layer leverages Gemini's multi-modal processing capabilities to
+                        analyze petabytes of climate data, soil chemistry, and historical yield patterns in real-time.
+                        This isn't just data; it's the future of food security.
+                    </p>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-accent-emerald">hub</span>
+                            <div>
+                                <h5 class="text-white font-bold text-sm mb-1" data-translate="aiFeature1Title">Neural
+                                    Mapping</h5>
+                                <p class="text-white/50 text-xs" data-translate="aiFeature1Desc">Self-learning agronomic
+                                    models.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-accent-emerald">satellite_alt</span>
+                            <div>
+                                <h5 class="text-white font-bold text-sm mb-1" data-translate="aiFeature2Title">Sat-Sync
+                                </h5>
+                                <p class="text-white/50 text-xs" data-translate="aiFeature2Desc">Live constellation
+                                    integration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 w-full h-full relative min-h-[400px]">
+                    <!-- Abstract Graphic Representation -->
+                    <div class="absolute inset-0 bg-gradient-to-l from-primary-dark to-transparent z-10"></div>
+                    <div
+                        class="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent-emerald/40 via-transparent to-transparent">
+                    </div>
+                    <img alt="Abstract neural network" class="w-full h-full object-cover"
+                        data-alt="Abstract glowing neural network connection nodes on deep green background"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYciX-C7MPN-WtD7-tjCE0PM7R2IpYKtvudRXMtj0xgsyfXAhD5aJ10MwzgxfiVKGpJIwmaavNNnm_N0HbDrau12kpdPkzE_lbXDJdL0SgeUqXzaPpKNUVbUJza2LXReVS5zlnLfusi73fL61TGNTs-ZIyHQk1Os7fr7hvKE7ga3BOMLQX_4wHejoE0JP9Pqr3VWyxEeayqyWsfUhOPwFWeUy3uOxRsP0P22VxDZ7aONL7PTVYd2uKUeL9sh1eSo6zL2InkwoSxpg" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-background-dark pt-20 pb-10 px-6 lg:px-20 text-white">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+            <div class="lg:col-span-2">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-primary p-1.5 rounded">
+                        <svg class="w-6 h-6 text-white" fill="none" viewbox="0 0 48 48"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h1 class="font-serif text-2xl font-bold tracking-tight">AgriPredict</h1>
+                </div>
+                <p class="text-slate-400 max-w-sm mb-8" data-translate="footerTagline">
+                    The world's leading intelligence platform for enterprise agriculture. We turn complex environmental
+                    data into actionable growth strategies.
+                </p>
+                <div class="flex gap-4">
+                    <a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary transition-colors"
+                        href="#">
+                        <span class="material-symbols-outlined text-sm">public</span>
+                    </a>
+                    <a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary transition-colors"
+                        href="#">
+                        <span class="material-symbols-outlined text-sm">link</span>
+                    </a>
+                    <a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary transition-colors"
+                        href="#">
+                        <span class="material-symbols-outlined text-sm">share</span>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h6 class="font-bold text-sm uppercase tracking-widest mb-6" data-translate="footerCompany">Company</h6>
+                <ul class="space-y-4 text-slate-400 text-sm">
+                    <li><a class="hover:text-primary transition-colors" href="#" data-translate="footerAbout">About
+                            Us</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#"
+                            data-translate="footerLeadership">Leadership</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#"
+                            data-translate="footerSustainability">Sustainability</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#" data-translate="footerImpact">Global
+                            Impact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h6 class="font-bold text-sm uppercase tracking-widest mb-6" data-translate="footerResources">Resources
+                </h6>
+                <ul class="space-y-4 text-slate-400 text-sm">
+                    <li><a class="hover:text-primary transition-colors" href="#"
+                            data-translate="footerDocs">Documentation</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#" data-translate="footerAPI">API
+                            Reference</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#" data-translate="footerHelp">Help
+                            Center</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#" data-translate="footerStatus">System
+                            Status</a></li>
+                </ul>
+            </div>
+            <div>
+                <h6 class="font-bold text-sm uppercase tracking-widest mb-6" data-translate="footerNewsletter">
+                    Newsletter</h6>
+                <p class="text-xs text-slate-400 mb-4" data-translate="footerNewsletterDesc">Get the latest agri-tech
+                    insights delivered weekly.</p>
+                <form class="flex flex-col gap-2">
+                    <input
+                        class="bg-white/5 border border-white/10 rounded px-4 py-2 text-sm focus:outline-none focus:border-primary transition-colors"
+                        placeholder="Email address" type="email" />
+                    <button
+                        class="bg-primary text-white py-2 rounded text-sm font-bold hover:bg-primary-dark transition-colors"
+                        data-translate="footerSubscribe">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto pt-10 border-t border-white/5 flex flex-col md:row-reverse md:flex-row justify-between items-center gap-6">
+            <p class="text-slate-500 text-xs" data-translate="footerCopyright">© 2024 AgriPredict Systems Inc. All
+                rights reserved.</p>
+            <div class="flex gap-8 text-slate-500 text-xs">
+                <a class="hover:text-white transition-colors" href="#" data-translate="footerPrivacy">Privacy Policy</a>
+                <a class="hover:text-white transition-colors" href="#" data-translate="footerTerms">Terms of Service</a>
+                <a class="hover:text-white transition-colors" href="#" data-translate="footerCookies">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                navHome: "Home",
+                navPredict: "Predict",
+                navDetect: "Detect",
+                navChat: "Chatbot",
+                ctaButton: "Predict Now",
+                heroTitle: "Precision Intelligence for",
+                heroHighlight: "Global Agriculture.",
+                heroDescription: "Empowering modern enterprises with Gemini-powered AI insights for yield optimization, resource management, and climate risk mitigation.",
+                predictNow: "Predict Now",
+                watchFilm: "Watch Vision Film",
+                stat1: "Prediction Accuracy",
+                stat2: "Enterprise Partners",
+                stat3: "Hectares Monitored",
+                stat4: "Supported Countries",
+                sectionTitle: "Enterprise Suite",
+                sectionSubtitle: "Smart Farming Solutions",
+                card1Title: "Soil Analytics",
+                card1Desc: "Advanced nutrient mapping and moisture tracking using multi-spectral satellite imagery.",
+                card2Title: "Yield Forecasting",
+                card2Desc: "AI-driven production estimates with 95% confidence intervals for future-proof planning.",
+                card3Title: "Pest Risk",
+                card3Desc: "Early warning systems detecting biological threats before they impact crop quality.",
+                card4Title: "Supply Chain",
+                card4Desc: "End-to-end logistics optimization from farm-gate to global distribution hubs.",
+                readMore: "Read More",
+                aiSectionLabel: "The Engine",
+                aiTitle: "Gemini-Driven AI Architecture",
+                aiDescription: "Our proprietary intelligence layer leverages Gemini's multi-modal processing capabilities to analyze petabytes of climate data, soil chemistry, and historical yield patterns in real-time. This isn't just data; it's the future of food security.",
+                aiFeature1Title: "Neural Mapping",
+                aiFeature1Desc: "Self-learning agronomic models.",
+                aiFeature2Title: "Sat-Sync",
+                aiFeature2Desc: "Live constellation integration.",
+                footerTagline: "The world's leading intelligence platform for enterprise agriculture. We turn complex environmental data into actionable growth strategies.",
+                footerCompany: "Company",
+                footerAbout: "About Us",
+                footerLeadership: "Leadership",
+                footerSustainability: "Sustainability",
+                footerImpact: "Global Impact",
+                footerResources: "Resources",
+                footerDocs: "Documentation",
+                footerAPI: "API Reference",
+                footerHelp: "Help Center",
+                footerStatus: "System Status",
+                footerNewsletter: "Newsletter",
+                footerNewsletterDesc: "Get the latest agri-tech insights delivered weekly.",
+                footerSubscribe: "Subscribe",
+                footerCopyright: "© 2024 AgriPredict Systems Inc. All rights reserved.",
+                footerPrivacy: "Privacy Policy",
+                footerTerms: "Terms of Service",
+                footerCookies: "Cookie Policy"
+            },
+            ta: {
+                navHome: "முகப்பு",
+                navPredict: "கணிப்பு",
+                navDetect: "கண்டறி",
+                navChat: "செயற்கை நுண்ணறிவு",
+                ctaButton: "இப்போது கணிக்கவும்",
+                heroTitle: "உலகளாவிய வேளாண்மைக்கான",
+                heroHighlight: "தீர்மான நுண்ணறிவு.",
+                heroDescription: "Gemini-இயக்கப்பட்ட AI நுண்ணறிவுகளுடன் நவீன நிறுவனங்களை உருவாக்குகிறோம்.",
+                predictNow: "இப்போது கணிக்கவும்",
+                watchFilm: "கண்ணோட்டப் படம்",
+                stat1: "கணிப்பு தீர்மானம்",
+                stat2: "நிறுவன கூட்டாளிகள்",
+                stat3: "கண்காணிக்கப்படும் ஹெக்டேர்கள்",
+                stat4: "ஆதரிக்கப்படும் நாடுகள்",
+                sectionTitle: "நிறுவன தொகுப்பு",
+                sectionSubtitle: "ஸ்மார்ட் வேளாண்மை தீர்வுகள்",
+                card1Title: "மண் பகுப்பாய்வு",
+                card1Desc: "பல்-ஸ்பெக்ட்ரல் உலகப் படங்களைப் பயன்படுத்தி ஊட்டச்சத்து கண்காணிப்பு.",
+                card2Title: "மகசுல் முன்கணிப்பு",
+                card2Desc: "AI-சார்ந்த உற்பத்தி மதிப்பீடுகள்.",
+                card3Title: "நோய் அபாயம்",
+                card3Desc: "பயிர் தரத்தை பாதிக்கும் முன் உயிரியல் அபாய எச்சரிக்கை அமைப்பு.",
+                card4Title: "விதரணை சங்கிலி",
+                card4Desc: "பண்ணையிலிருந்து உலகளாவிய விதரணை மரகளம் வரை முழு துளியை உட்டல் மேம்பாடு.",
+                readMore: "மேலும் வாசிக்கவும்",
+                aiSectionLabel: "இயங்கிரம்",
+                aiTitle: "Gemini-சார்ந்த AI கட்டமைப்பு",
+                aiDescription: "எங்கள் தனியுரிமை நுண்ணறிவு நிலை Gemini-இன் பல்-மோடல் செயலாக்க திறன்களைப் பயன்படுத்துகிறது.",
+                aiFeature1Title: "நெட்வர்க் வரைபடம்",
+                aiFeature1Desc: "சுய-கற்றல் வேளாண்மை மாதிரிகள்.",
+                aiFeature2Title: "Sat-Sync",
+                aiFeature2Desc: "நேரடி உட்கோள் இணைப்பு.",
+                footerTagline: "நிறுவன வேளாண்மைக்கான உலகின் முன்னணி நுண்ணறிவு மெஞ்சையம்.",
+                footerCompany: "நிறுவனம்",
+                footerAbout: "எங்களைப் பற்றி",
+                footerLeadership: "தலைமை",
+                footerSustainability: "நிலைத்தன்மை",
+                footerImpact: "உலகளாவிய தாக்கம்",
+                footerResources: "வளங்கள்",
+                footerDocs: "ஆவணங்கள்",
+                footerAPI: "API குறிப்பு",
+                footerHelp: "உதவி மையம்",
+                footerStatus: "அமைப்பு நிலை",
+                footerNewsletter: "செய்தித்தாள்",
+                footerNewsletterDesc: "வாரதோறும் செய்திகளைப் பெறவும்.",
+                footerSubscribe: "செய்தித்தாள்",
+                footerCopyright: "© 2024 AgriPredict Systems Inc. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+                footerPrivacy: "தனியுரிமை கொள்கை",
+                footerTerms: "சேவை விதிமுறைகள்",
+                footerCookies: "குக்கீ கொள்கை"
+            },
+            hi: {
+                navHome: "होम",
+                navPredict: "भविष्यवाणी",
+                navDetect: "पहचान",
+                navChat: "चैटबॉट",
+                ctaButton: "अभी भविष्यवाणी करें",
+                heroTitle: "वैश्विक कृषि के लिए",
+                heroHighlight: "सटीक बुद्धिमत्ता.",
+                heroDescription: "Gemini-संचालित AI जानकारी के साथ आधुनिक उद्यमों को सशक्त बनाना.",
+                predictNow: "अभी भविष्यवाणी करें",
+                watchFilm: "विज़न फ़िल्म देखें",
+                stat1: "भविष्यवाणी सटीकता",
+                stat2: "उद्यम भागीदार",
+                stat3: "निगरानी किए गए हेक्टेयर",
+                stat4: "समर्थित देश",
+                sectionTitle: "एंटरप्राइज़ सूट",
+                sectionSubtitle: "स्मार्ट खेती समाधान",
+                card1Title: "मिट्टी विश्लेषण",
+                card1Desc: "बहु-वर्णक्रमीय उपग्रह छवियों का उपयोग करके उन्नत पोषक मानचित्रण.",
+                card2Title: "उपज पूर्वानुमान",
+                card2Desc: "AI-संचालित उत्पादन अनुमान.",
+                card3Title: "कीट जोखिम",
+                card3Desc: "फसल की गुणवत्ता पर प्रभाव डालने से पहले जैविक खतरों का पता लगाने वाली प्रणाली.",
+                card4Title: "आपूर्ति शृंखला",
+                card4Desc: "फार्म-गेट से वैश्विक वितरण केंद्रों तक समग्र लॉजिस्टिक्स अनुकूलन.",
+                readMore: "और पढ़ें",
+                aiSectionLabel: "इंजन",
+                aiTitle: "Gemini-संचालित AI आर्किटेक्चर",
+                aiDescription: "हमारी स्वामित्व वाली बुद्धिमत्ता परत Gemini की बहु-मोडल प्रसंस्करण क्षमताओं का लाभ उठाती है.",
+                aiFeature1Title: "न्यूरल मैपिंग",
+                aiFeature1Desc: "स्व-शिक्षा कृषि मॉडल.",
+                aiFeature2Title: "Sat-Sync",
+                aiFeature2Desc: "लाइव सैटेलाइट एकीकरण.",
+                footerTagline: "उद्यम कृषि के लिए दुनिया का अग्रणी बुद्धिमत्ता मंच.",
+                footerCompany: "कंपनी",
+                footerAbout: "हमारे बारे में",
+                footerLeadership: "नेतृत्व",
+                footerSustainability: "स्थिरता",
+                footerImpact: "वैश्विक प्रभाव",
+                footerResources: "संसाधन",
+                footerDocs: "दस्तावेज़",
+                footerAPI: "API संदर्भ",
+                footerHelp: "सहायता केंद्र",
+                footerStatus: "सिस्टम स्थिति",
+                footerNewsletter: "न्यूज़लेटर",
+                footerNewsletterDesc: "साप्ताहिक कृषि-तकनीक जानकारी प्राप्त करें.",
+                footerSubscribe: "सब्सक्राइब करें",
+                footerCopyright: "© 2024 AgriPredict Systems Inc. सभी अधिकार सुरक्षित.",
+                footerPrivacy: "गोपनीयता नीति",
+                footerTerms: "सेवा की शर्तें",
+                footerCookies: "कुकी नीति"
+            }
+        };
+
+        function setLanguage(lang) {
+            localStorage.setItem('language', lang);
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'en';
+            setLanguage(savedLang);
+        });
+    </script>
+</body>
+
+</html>
