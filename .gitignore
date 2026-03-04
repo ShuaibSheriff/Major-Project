@@ -1,4 +1,5 @@
 mtenv/
+myenv/
 .env
 __pycache__/
 PredictIt-Disease-Detection/

@@ -305,6 +305,7 @@ body {
         </div>
 
         <form class="input-form" action="/chat" method="post">
+            <input type="hidden" name="language" id="selected_language" value="en">
             <input 
                 type="text" 
                 name="input_text" 
@@ -350,6 +351,13 @@ body {
 
     function setLanguage(lang) {
         localStorage.setItem('language', lang);
+        
+        // Update hidden language input if it exists
+        const langInput = document.getElementById('selected_language');
+        if (langInput) {
+            langInput.value = lang;
+        }
+
         document.querySelectorAll('[data-translate]').forEach(el => {
             const key = el.getAttribute('data-translate');
             if (translations[lang] && translations[lang][key]) {

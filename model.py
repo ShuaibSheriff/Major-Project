@@ -11,7 +11,7 @@ class Plant_Disease_Model(nn.Module):
 
     def __init__(self):
         super().__init__()
-        self.network = models.resnet34(pretrained=True)
+        self.network = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
         num_ftrs = self.network.fc.in_features
         self.network.fc = nn.Linear(num_ftrs, 38)
 

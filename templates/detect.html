@@ -218,7 +218,7 @@ body {
         <div class="header">
             <a href="{{ url_for('home') }}">
                 <button class="back-btn">
-                    <img src="templates/assets/arrow-small-left.png" alt="Back" />
+                    <img src="{{ url_for('static', filename='assets/arrow-small-left.png') }}" alt="Back" />
                 </button>
             </a>
             <h1 class="title" data-translate="diseaseDetector">Disease Detector</h1>
@@ -227,7 +227,7 @@ body {
         <form action="{{ url_for('result') }}" method="POST" enctype="multipart/form-data">
             <div class="upload-area">
                 <div class="upload-icon">
-                    <img src="templates/assets/upload (1).png" alt="Upload" />
+                    <img src="{{ url_for('static', filename='assets/upload (1).png') }}" alt="Upload" />
                 </div>
                 <input 
                     type="file" 

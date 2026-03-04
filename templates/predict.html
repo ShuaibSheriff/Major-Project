@@ -357,10 +357,11 @@
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label for="location" data-translate="location">Location (City/District)</label>
                     <input type="text" id="location" name="location" class="form-input"
-                        placeholder="Enter your city or district" />
+                        placeholder="Enter your city or district" onblur="fetchWeatherData()" />
                     <button type="button" class="fetch-btn" id="fetchWeatherBtn" onclick="fetchWeatherData()">
                         <span data-translate="fetchWeather">Fetch Weather Data</span>
                     </button>
+                    <span class="error-message" id="weatherError" style="display: none;"></span>
                 </div>
 
                 <div class="form-group">
@@ -381,14 +382,14 @@
                         min="5" max="112" step="0.01" required />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="temp-group">
                     <label for="temperature" data-translate="temperature">Temperature (°C)</label>
                     <input type="number" id="temperature" name="Temperature_value" class="form-input"
                         placeholder="18 - 43" min="18" max="43" step="0.01" required />
                     <span class="info-badge" id="tempBadge" style="display: none;">Auto-filled</span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="hum-group">
                     <label for="humidity" data-translate="humidity">Humidity (%)</label>
                     <input type="number" id="humidity" name="Humidity_value" class="form-input" placeholder="11 - 100"
                         min="11" max="100" step="0.01" required />
@@ -400,12 +401,11 @@
                         max="8" step="0.01" required />
                 </div>
 
-                <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="form-group" id="rain-group" style="grid-column: 1 / -1;">
                     <label for="rainfall" data-translate="rainfall">Rainfall (mm)</label>
                     <input type="number" id="rainfall" name="Rainfall_value" class="form-input" placeholder="30 - 300"
                         min="30" max="300" step="0.01" required />
                     <span class="info-badge" id="rainBadge" style="display: none;">Auto-filled</span>
-                    <span class="error-message" id="weatherError" style="display: none;"></span>
                 </div>
             </div>
 
@@ -415,7 +415,16 @@
         {% if prediction %}
         <div class="result-section">
             <h3 data-translate="recommendedCrop">Recommended Crop</h3>
-            <div class="result-text">{{ prediction }}</div>
+            <div class="result-text" style="margin-bottom: 1.5rem;">{{ prediction }}</div>
+            <form action="/chat" method="post" style="display: inline-block;">
+                <input type="hidden" name="language" id="result_language" value="en">
+                <input type="hidden" name="input_text"
+                    value="What are the water requirements and estimated market price for growing {{ prediction }}?">
+                <button type="submit" class="fetch-btn"
+                    style="margin: 0 auto; background: var(--white); color: var(--primary-green);">
+                    💬 Chat with AI about {{ prediction }}
+                </button>
+            </form>
         </div>
         {% endif %}
 
@@ -536,11 +545,23 @@
                 fetchBtn.disabled = false;
                 const currentLang = localStorage.getItem('language') || 'en';
                 fetchBtn.innerHTML = `<span>${translations[currentLang].fetchWeather}</span>`;
+
+                // Unhide the fields so the user can enter them manually
+                document.getElementById('temp-group').style.display = 'flex';
+                document.getElementById('hum-group').style.display = 'flex';
+                document.getElementById('rain-group').style.display = 'flex';
             }
         }
 
         function setLanguage(lang) {
             localStorage.setItem('language', lang);
+
+            // Update hidden language input if it exists
+            const resultLangInput = document.getElementById('result_language');
+            if (resultLangInput) {
+                resultLangInput.value = lang;
+            }
+
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
                 if (translations[lang] && translations[lang][key]) {
